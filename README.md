@@ -1,2 +1,3 @@
-# CrapOS
- Testing out programming an operating system
+Built for the x86 architecture using x86 assembly language
+
+BIOS loads with legacy booting
