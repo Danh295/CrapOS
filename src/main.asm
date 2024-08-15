@@ -3,7 +3,7 @@
 org 0x7C00
 
 ; tell assembler to emit 16 bit code
-; x86 should be backwards compatible with 8086 architectures, so must start with 16 bits */
+; x86 should be backwards compatible with 8086 architectures, so must start with 16 bits
 bits 16
 
 %define ENDL 0x0D, 0x0A
@@ -21,7 +21,9 @@ _start:
 ; Prints a string to the screen
 ; Params:
 ;   - ds:si points to string
-; TODO: need to fully understand al, ah and index registers
+; TODO: 
+; - need to fully understand al, ah and index registers
+; - test program more with VirtualBox
 puts:
     ; save registers in stack
     push si
