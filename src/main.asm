@@ -43,6 +43,7 @@ puts:
     ; restore registers
     pop ax
     pop si
+    ret
 
 main:
 

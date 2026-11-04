@@ -1,0 +1,6 @@
+# Local-only tooling
+CLAUDE.md
+.claude/
+
+# Build output (regenerate with `make`)
+build/

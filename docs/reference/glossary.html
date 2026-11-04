@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CrapOS glossary</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<main>
+<nav class="crumbs"><a href="../lessons/0001-real-mode-bios-and-puts.html">Lesson 1</a> · <a href="../RESOURCES.md">Resources</a></nav>
+<h1>Glossary</h1>
+<p class="sub">Every lesson uses these terms exactly as defined here.</p>
+<table>
+  <tr><th>Term</th><th>Meaning</th></tr>
+  <tr><td>Real mode</td><td>The CPU's original mode: 20-bit segmented addresses (1 MB), no memory protection. The BIOS and your boot sector run in it.</td></tr>
+  <tr><td>Segment, offset</td><td>The two 16-bit halves of a real-mode address. Physical address = segment × 16 + offset.</td></tr>
+  <tr><td>BIOS</td><td>Firmware that finds the boot disk, loads sector 0, and offers services to call via <code>int</code>.</td></tr>
+  <tr><td>Boot sector</td><td>The first 512-byte sector of the disk. Loaded at <code>0x7C00</code> and only bootable if it ends in <code>55 AA</code>.</td></tr>
+  <tr><td>BIOS interrupt call</td><td>A software interrupt (<code>int N</code>) that runs a BIOS service. The function number goes in <code>AH</code>.</td></tr>
+  <tr><td><code>int 0x10</code></td><td>Video services. With <code>AH=0Eh</code>, prints the character in <code>AL</code> (teletype output).</td></tr>
+  <tr><td><code>int 0x13</code></td><td>Disk services (read, write, format sectors). Used later to load the second stage.</td></tr>
+  <tr><td><code>int 0x16</code></td><td>Keyboard services. With <code>AH=00h</code>, waits for a key and returns its ASCII value in <code>AL</code> and scan code in <code>AH</code>.</td></tr>
+  <tr><td><code>puts</code></td><td>CrapOS's own subroutine (not BIOS). Prints the null-terminated string at <code>ds:si</code> by calling <code>int 0x10</code> once per character.</td></tr>
+  <tr><td><code>lodsb</code></td><td>Load the byte at <code>DS:SI</code> into <code>AL</code>, then increment <code>SI</code>.</td></tr>
+  <tr><td>First stage / second stage</td><td>The first stage is the 512-byte boot sector. A second stage is more code it loads from disk, so the OS can be larger than one sector.</td></tr>
+  <tr><td>Stage 2</td><td>The code the boot sector loads from disk (4 sectors at <code>0x7E00</code>). We say "stage 2", not "kernel": there is no protected mode and no C. CrapOS's shell lives here.</td></tr>
+  <tr><td>Boot drive</td><td>The drive number the BIOS leaves in <code>DL</code> when it jumps to the boot sector. The loader must keep it to read from the same disk.</td></tr>
+  <tr><td>Load address</td><td>The memory address stage 2 is read to: <code>0x7E00</code>, the first byte after the boot sector.</td></tr>
+  <tr><td>Sector (CHS)</td><td>How <code>int 0x13</code> <code>AH=02h</code> addresses the disk: cylinder, head, sector. Sector numbers start at 1, so stage 2 starts at sector 2.</td></tr>
+  <tr><td>Command</td><td>One named action the stage 2 shell runs: <code>help</code>, <code>reboot</code>, <code>crap</code> or <code>clear</code>.</td></tr>
+  <tr><td>Shell loop</td><td>Stage 2's main loop: show a prompt, read a line into the 64-byte buffer, look the command up and run it.</td></tr>
+</table>
+</main>
+</body>
+</html>
