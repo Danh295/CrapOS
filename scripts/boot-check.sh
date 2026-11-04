@@ -4,6 +4,7 @@
 # usage: scripts/boot-check.sh <image> <expected text>...
 #   exits 0 if every expected string appears on screen, 1 otherwise.
 #   BOOT_WAIT=<seconds> changes how long we let the VM run before looking (default 3).
+#   BOOT_KEYS="h e l p ret" types those keys (QEMU sendkey names) before looking.
 #
 # How it works: in BIOS text mode the screen IS memory. 80x25 cells starting at
 # physical 0xB8000, 2 bytes per cell (character byte, then attribute byte).
@@ -22,12 +23,18 @@ trap 'rm -rf "$work"' EXIT
 # Send monitor commands on stdin: wait for the BIOS + our code to run, dump, quit.
 {
     sleep "${BOOT_WAIT:-3}"
+    # Optionally type keys (QEMU key names: letters, "ret", "spc", "backspace", ...).
+    for key in ${BOOT_KEYS:-}; do
+        echo "sendkey $key"
+        sleep 0.3
+    done
+    sleep 1
     # The filename is quoted on purpose: unquoted, the monitor's expression parser
     # reads "4000 /var/..." as 4000 divided by something.
     echo "pmemsave 0xb8000 4000 \"$work/vga.bin\""
     sleep 1
     echo "quit"
-} | qemu-system-i386 -fda "$image" -display none -monitor stdio >/dev/null 2>&1
+} | qemu-system-i386 -drive "file=$image,format=raw,if=floppy" -display none -monitor stdio >/dev/null 2>&1
 
 python3 -I - "$work/vga.bin" "$@" <<'EOF'
 import sys
