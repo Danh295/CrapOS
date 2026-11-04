@@ -3,6 +3,7 @@ BUILD_DIR=build
 IMG=$(BUILD_DIR)/crapos.img
 
 .PHONY: all run check clean
+.DELETE_ON_ERROR:
 
 all: $(IMG)
 

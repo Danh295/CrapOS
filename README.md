@@ -18,7 +18,7 @@ that's not a command. nice try, genius.
 crap>
 ```
 
-(That is the real screen text from `make check`, captured from QEMU's VGA text buffer.)
+(A typical session, with the text taken from QEMU's VGA text buffer. `crap` picks a line from the timer, so yours will differ.)
 
 ## How it works
 

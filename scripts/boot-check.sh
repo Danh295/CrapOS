@@ -17,6 +17,8 @@ if [ "$#" -lt 2 ]; then
 fi
 image=$1; shift
 
+command -v qemu-system-i386 >/dev/null || { echo "qemu-system-i386 not found (brew install qemu)" >&2; exit 2; }
+
 work=$(mktemp -d)
 trap 'rm -rf "$work"' EXIT
 
@@ -35,6 +37,8 @@ trap 'rm -rf "$work"' EXIT
     sleep 1
     echo "quit"
 } | qemu-system-i386 -drive "file=$image,format=raw,if=floppy" -display none -monitor stdio >/dev/null 2>&1
+
+[ -s "$work/vga.bin" ] || { echo "FAIL: QEMU produced no screen dump (image missing, or boot too slow? try BOOT_WAIT=6)" >&2; exit 1; }
 
 python3 -I - "$work/vga.bin" "$@" <<'EOF'
 import sys
