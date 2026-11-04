@@ -8,14 +8,11 @@ bits 16
 
 %define ENDL 0x0D, 0x0A
 
-section .data
-    msg_hello: db 'Hello world!', ENDL, 0x00
-
-section .text
-    global _start  
-
-_start:
-    jmp main ; ensures that main is still the entry point
+; a flat binary (-f bin) has no sections to load separately: the BIOS reads the
+; first 512 bytes and runs from byte 0, so code and data must share that one sector.
+; (NASM's 'section .data/.text' laid the data out AFTER the padding and the 55 AA
+; signature, i.e. outside the sector the BIOS loads.)
+jmp main ; execution starts at byte 0, so skip over puts to reach main
 
 
 ; Prints a string to the screen
@@ -28,6 +25,7 @@ puts:
     ; save registers in stack
     push si
     push ax
+    push bx    ; bh is overwritten below (video page), so preserve the caller's bx
 .loop:
     lodsb      ; loads the byte from DS:SI into AL register, then increments SI
     or al, al  ; check if next character is null
@@ -40,7 +38,8 @@ puts:
 
     jmp .loop
 .done:
-    ; restore registers
+    ; restore registers (reverse order of the pushes)
+    pop bx
     pop ax
     pop si
     ret
@@ -64,6 +63,8 @@ main:
 
 .halt:
     jmp .halt ; jumpts to .halt unconditionally to form infinite loop if CPU starts again (can also juse use 'jmp $')
+
+msg_hello: db 'Hello world!', ENDL, 0x00
 
 ; fill rest of the 512 bytes with 00 and fill last 2 bytes with boot sector convention
 times 510-($-$$) db 0
