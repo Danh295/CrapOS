@@ -2,5 +2,14 @@
 CLAUDE.md
 .claude/
 
+# Local-only teaching workspace (docs/adr/ stays tracked)
+docs/lessons/
+docs/assets/
+docs/learning-records/
+docs/reference/
+docs/NOTES.md
+docs/RESOURCES.md
+docs/MISSION.md
+
 # Build output (regenerate with `make`)
 build/
