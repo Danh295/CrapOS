@@ -1,0 +1,18 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  boot-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install NASM and QEMU
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y nasm qemu-system-x86
+      - name: Build and run the boot tests
+        run: make check
