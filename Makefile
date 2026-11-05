@@ -15,6 +15,7 @@ $(BUILD_DIR)/%.bin: $(SRC_DIR)/%.asm
 $(IMG): $(BUILD_DIR)/stage1.bin $(BUILD_DIR)/stage2.bin
 	@test $$(( $$(wc -c < $(BUILD_DIR)/stage1.bin) )) -eq 512 || { echo "stage1.bin must be exactly 512 bytes"; exit 1; }
 	@test $$(( $$(wc -c < $(BUILD_DIR)/stage2.bin) )) -eq 2048 || { echo "stage2.bin must be exactly 2048 bytes"; exit 1; }
+	@test "$$(od -An -tx1 -j510 -N2 $(BUILD_DIR)/stage1.bin | tr -d ' \n')" = "55aa" || { echo "stage1.bin must end with the boot signature 55 AA"; exit 1; }
 	cat $^ > $@
 	truncate -s 1440k $@
 
@@ -22,11 +23,10 @@ $(IMG): $(BUILD_DIR)/stage1.bin $(BUILD_DIR)/stage2.bin
 run: $(IMG)
 	qemu-system-i386 -drive file=$(IMG),format=raw,if=floppy
 
-# Boot headless and assert what shows up on screen. BOOT_KEYS types keys after boot.
+# Run the boot tests: headless QEMU, drives the shell through QMP, asserts on screen text.
+# Run one scenario with: python3 tests/boot_tests.py -k backspace
 check: $(IMG)
-	scripts/boot-check.sh $(IMG) "CrapOS 0.1" "crap>"
-	BOOT_KEYS="h e l p ret" scripts/boot-check.sh $(IMG) "Commands:" "reboot  - restart" "clear   - wipe" "crap    - say"
-	BOOT_KEYS="c r a p ret x ret" scripts/boot-check.sh $(IMG) "[crap] " "not a command"
+	python3 tests/boot_tests.py $(IMG)
 
 clean:
 	rm -rf $(BUILD_DIR)
