@@ -2,6 +2,10 @@
 
 A crappy little operating system in 16-bit x86 assembly. It boots from a floppy image through legacy BIOS, loads a second stage from disk, and drops you into a tiny shell.
 
+![CrapOS booting and running help, crap and an unknown command](docs/media/crapos.gif)
+
+The same session as text:
+
 ```
 CrapOS 0.1 - a crappy little OS
 type 'help' if you dare.
@@ -18,7 +22,7 @@ that's not a command. nice try, genius.
 crap>
 ```
 
-(A typical session, with the text taken from QEMU's VGA text buffer. `crap` picks a line from the timer, so yours will differ.)
+(Recorded from QEMU. `crap` picks a line from the timer, so yours will differ. A still frame is in [docs/media/crapos.png](docs/media/crapos.png).)
 
 ## How it works
 
