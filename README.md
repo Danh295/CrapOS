@@ -1,7 +1,5 @@
 # CrapOS
 
-[![CI](https://github.com/Danh295/CrapOS/actions/workflows/ci.yml/badge.svg)](https://github.com/Danh295/CrapOS/actions/workflows/ci.yml)
-
 A crappy little operating system in 16-bit x86 assembly. It boots from a floppy image through legacy BIOS, loads a second stage from disk, and drops you into a tiny shell.
 
 ```
