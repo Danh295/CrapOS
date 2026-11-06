@@ -63,3 +63,7 @@ tests/boot_tests.py  headless QEMU boot tests
 docs/adr/            architecture decision records
 docs/research/       notes on how boot code is tested
 ```
+
+## License
+
+MIT. See [LICENSE](LICENSE).
